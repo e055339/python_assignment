@@ -1,8 +1,21 @@
+import os
 from fastapi import FastAPI, HTTPException, Depends, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from PIL import Image
 from io import BytesIO
 import time
+from dotenv import load_dotenv
+import google.cloud.logging
+import logging
+
+load_dotenv()
+
+google_credentials_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+logging_client = google.cloud.logging.Client.from_service_account_json(google_credentials_path)
+logging_client.setup_logging()
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 app = FastAPI()
 
@@ -10,8 +23,8 @@ fake_users_db = {
     "user1": {"username": "user1", "password": "password1"},
 }
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 sessions = {}
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def authenticate_user(username: str, password: str):
@@ -32,7 +45,6 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
     token = f"token-{username}"
     sessions[token] = username
-
     return {"access_token": token, "token_type": "bearer"}
 
 
@@ -40,7 +52,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 def logout(token: str = Depends(oauth2_scheme)):
     if token not in sessions:
         raise HTTPException(status_code=401, detail="Invalid token")
-    
+
     del sessions[token]
     return {"message": "Logged out successfully"}
 
@@ -51,6 +63,8 @@ def generate_image(width: int, height: int, token: str = Depends(oauth2_scheme))
 
     if token not in sessions:
         raise HTTPException(status_code=401, detail="Invalid token")
+
+    logger.info(f"User {sessions[token]} requested an image of size {width}x{height}")
 
     img = Image.new('RGB', (width, height), color='blue')
 
