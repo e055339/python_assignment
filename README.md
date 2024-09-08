@@ -40,7 +40,8 @@
 4. **[程式能力]申請GoogleCloud免費額度，使用GoogleCloudLogging紀錄第二題的 API
   使用狀況上傳。**
 
-    ![google_log](https://github.com/user-attachments/assets/e91456dd-4011-4c60-bb8b-40107fb35ab4)
+    ![google_log](https://github.com/user-attachments/assets/d56a3103-1682-4e3e-bca3-bdfbd19c95d2)
+
 
 
 ---
@@ -119,4 +120,4 @@
       
     以上工具為有實際使用經驗，但深入程度還有待精進，也期待進入貴公司能快速擴展自身的 Roadmap，接觸更深入的技術。
 
-    [Backend Developer Roadmap: What is Backend Development?](https://roadmap.sh/backend)
+    [我的 Backend Roadmap](https://roadmap.sh/backend)
